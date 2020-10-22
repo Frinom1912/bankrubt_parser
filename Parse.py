@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options as options
 import SQL_connect as SQL
 import time
 from bs4 import BeautifulSoup
+import sys
 
 class Parse(ABC):
     infos = []
@@ -30,12 +31,15 @@ class ParserFedresurs(Parse):
         browser.get(self.__route)
         time.sleep(2)
         i = 1
+        page = 1
         soup = BeautifulSoup(browser.page_source, "html.parser")
         soup = soup.find("tr", class_="pager").find("tr").find_all("td")
         maxS = len(soup)
         loop = 0
         while(True):
             if i<maxS:
+                sys.stdout.write(f"Page {page}\n")
+                page+= 1
                 browser.find_element_by_class_name("pager").find_element_by_tag_name("tr").find_elements_by_tag_name("td")[i].click()
                 elements = BeautifulSoup(browser.page_source, "html.parser")
                 elements = elements.find("table", class_='bank')
@@ -49,6 +53,16 @@ class ParserFedresurs(Parse):
                     res3 = els[1].get_text().replace("\t","").replace("\n", "").replace(".","-")+":00"
                     res4 = res3[res3.find(" "):]
                     res5 = res3[res3.rfind("-") + 1:res3.find(" ")] + "-" + res3[res3.find("-") + 1:res3.rfind("-")] + "-" + res3[:res3.find("-")]
+                    status = els[7].get_text().replace("\t","").replace("\n", "")
+                    if status.find("прием") != -1:
+                        status = 0
+                    else:
+                        status = 1
+                    apptype = els[6].get_text().replace("\t","").replace("\n", "")
+                    if apptype.find("Открытая") != -1:
+                        apptype = 0
+                    else:
+                        apptype = 1
                     self.infos.append(
                         {
                             "BidID": els[0].get_text().replace("\t","").replace("\n", ""),
@@ -57,8 +71,8 @@ class ParserFedresurs(Parse):
                             "AgencyURL": "https://bankrot.fedresurs.ru" + els[3].find("a").get("href"),
                             "Obligor": "https://bankrot.fedresurs.ru" + els[4].find("a").get("href"),
                             "BidType": els[5].get_text().replace("\t","").replace("\n", ""),
-                            "Status": els[6].get_text().replace("\t","").replace("\n", ""),
-                            "AppType": els[7].get_text().replace("\t","").replace("\n", "")
+                            "Status": status,
+                            "AppType": apptype
                         }
                     )
                 i+=1
@@ -72,4 +86,3 @@ class ParserFedresurs(Parse):
                     loop += 1
                 if loop == 2:
                     break
-
