@@ -14,7 +14,9 @@ class Config(object):
         config = configparser.ConfigParser()
         config.add_section("Database")
         config.add_section("Selenium")
-        config.set("Selenium", "WebDriver", "chromedriver")
+        config.add_section("SQL")
+        config.set("SQL", "Use SQL", "False")
+        config.set("Selenium", "WebDriver", "resources"+"\\"+"\\"+"chromedriver.exe")
         config.set("Selenium", "Chromium", "/usr/bin/google-chrome")
         config.set("Database", "database_user", "root")
         config.set("Database", "database_pass", "pass")
@@ -30,6 +32,7 @@ class Config(object):
         config = configparser.ConfigParser()
         config.read(self.route)
         return {
+            "SQL": config.get("SQL", "Use SQL"),
             "chrome": config.get("Selenium", "Chromium"),
             "webdriver": config.get("Selenium", "Webdriver"),
             "database_user": config.get("Database", "database_user"),
