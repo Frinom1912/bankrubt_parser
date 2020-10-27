@@ -6,14 +6,15 @@ import time
 from bs4 import BeautifulSoup
 import sys
 
+
 class Parse(ABC):
     infos = []
     @staticmethod
     def get_browser():
-        driver = SQL.Config("resources/config.env").get_config()["webdriver"]
-        chromium = SQL.Config("resources/config.env").get_config()["chrome"]
+        driver = SQL.Config("config.env").get_config()["webdriver"]
+        chromium = SQL.Config("config.env").get_config()["chrome"]
         option = options()
-        option.binary_location = chromium
+        #option.binary_location = chromium
         option.add_argument("-headless")
         option.add_argument("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36")
         return webdriver.Chrome(executable_path=driver, chrome_options=option)
