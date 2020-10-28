@@ -5,10 +5,9 @@
    ```
 2. cmd.exe
 3. ```sh
-    $ cd *папка установки*/bankrubt_parser
+    $ pip install parser_bankr_lib
     ```
 4. ```sh
-    $ virtualenv venv
-    $ venv\Scripts\activate
-    $ script.py
+    $ cd .\bankrubt_parser\
+	$ script.py
     ```
