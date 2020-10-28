@@ -1,8 +1,7 @@
-import SQL_connect as SQL
-import Parse as p
 import time
 import sys
-
+import parser_bankr_lib.SQL_connect as SQL
+import parser_bankr_lib.Parse as p
 
 def script():
     start_time = time.time()
